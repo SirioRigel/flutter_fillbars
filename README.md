@@ -17,7 +17,7 @@ that fills up over time or by assigning a value variable.
 
 ## Contents
 
--[Installation](#installation)
+- [Installation](#installation)
 - [Usage](#usage)
   - [Static fillbar](#static-fillbars)
 
@@ -31,11 +31,11 @@ To do.
 A Fillbar is highly customizable. However I've create a few presets that will you pick the Fillbar which suits your needs. Here are some usage examples
 
 ```dart
-const Fillbar(value: 50, width: 100, height: 20, fillColor: Colors.blue,) //  Creates an half full Fillbar
+const Fillbar(value: 50, width: 100, height: 20, fillColor: Colors.blue,)
+ //  Creates an half full Fillbar
 
-const Fillbar.static(value: 100, width: 100, height: 20) // Creates a full Fillbar. If not given, the fillColor is set to the primary color.
-
-const Fillbar
+const Fillbar.static(value: 100, width: 100, height: 20)
+ // Creates a full Fillbar. If not given, the fillColor is set to the primary color.
 ```
 
 ### Static fillbars
@@ -43,7 +43,8 @@ const Fillbar
 A static Fillbar the simplest type of Fillbar: it doesn't need an animation. Note that a value is required to be passed.
 
 ```dart
-const Fillbar.static(value: 100, width: 100, height: 20, fillColor: Colors.amber) // Creates a full Fillbar
+const Fillbar.static(value: 100, width: 100, height: 20, fillColor: Colors.amber)
+ // Creates a full Fillbar
 ```
 
 ## Additional information
