@@ -10,30 +10,49 @@ For general information about developing packages, see the Dart guide for
 and the Flutter guide for
 [developing packages and plugins](https://flutter.dev/developing-packages).
 -->
+# Fillbars
 
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+`flutter_fillbars` is a simple flutter package that allows you to create a containers 
+that fills up over time or by assigning a value variable.
 
-## Features
+## Contents
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+-[Installation](#installation)
+- [Usage](#usage)
+  - [Static fillbar](#static-fillbars)
 
-## Getting started
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+## Installation
+
+To do.
 
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
+A Fillbar is highly customizable. However I've create a few presets that will you pick the Fillbar which suits your needs. Here are some usage examples
 
 ```dart
-const like = 'sample';
+const Fillbar(value: 50, width: 100, height: 20, fillColor: Colors.blue,) //  Creates an half full Fillbar
+
+const Fillbar.static(value: 100, width: 100, height: 20) // Creates a full Fillbar. If not given, the fillColor is set to the primary color.
+
+const Fillbar
+```
+
+### Static fillbars
+
+A static Fillbar the simplest type of Fillbar: it doesn't need an animation. Note that a value is required to be passed.
+
+```dart
+const Fillbar.static(value: 100, width: 100, height: 20, fillColor: Colors.amber) // Creates a full Fillbar
 ```
 
 ## Additional information
 
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
+Please share and star this repository if you liked it. 
+If you want, you can even contribute, just open a pull-request and I'll be more than happy to review it.
+
+## RoadMad
+
+- [X] Static fillbar
+- [] Timed fillbar
+- [] Periodic fillbar
