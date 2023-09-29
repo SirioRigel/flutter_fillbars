@@ -1,28 +1,41 @@
 library flutter_fillbars;
-import 'dart:async';
 import "package:flutter/material.dart";
 
 class Fillbar extends StatefulWidget {
 
   /// Creates a Fillbar
   const Fillbar({
-    this.value,
-    this.height = 12,
-    this.width = 85,
+    required this.value,
+    this.height = 17,
+    this.width = 100,
     this.fillColor,
+    this.backgroundColor = const Color(0xFFCDCDCD),
+    this.borderColor = const Color(0x00000000),
+    this.paddingColor = const Color(0x00000000),
+    this.externalMargin = const EdgeInsets.all(8),
+    this.borderPadding = const EdgeInsets.all(2),
+    this.borderWidth = 1.3,
+    this.radius = 12,
     Key? key
   }) : super(key: key);
 
-  /// Generates a static Fillbar which is not animated.
+  /// Generates a static Fillbar set to a specific value.
   /// ```dart
   /// Fillbar.static(value: 100, width: 200)
   /// ```
   /// This is simple half full Fillbar.
   const Fillbar.static({
     required this.value,
-    this.height = 12,
-    this.width = 85,
+    this.height = 17,
+    this.width = 100,
     this.fillColor,
+    this.backgroundColor = const Color(0xFFCDCDCD),
+    this.borderColor = const Color(0x00000000),
+    this.paddingColor = const Color(0x00000000),
+    this.externalMargin = const EdgeInsets.all(8),
+    this.borderPadding = const EdgeInsets.all(2),
+    this.borderWidth = 1.3,
+    this.radius = 12,
     Key? key
   }) : super(key: key);
 
@@ -36,9 +49,9 @@ class Fillbar extends StatefulWidget {
   /// application lifecycle. The Fillbar will be automatically updated.
   /// If the value is greater than the constraints given by the flutter framework,
   /// the widget will adjust itself to the maxWidth allowed.
-  final double? value;
+  final double value;
 
-  /// Specifies the external heigth of the Fillbar. Note that this value cannot exceed
+  /// Specifies the external height of the Fillbar. Note that this value cannot exceed
   /// the flutter framework's constraints and will be set to maxHeight if
   /// it does so.
   /// Giving an height which is bigger than the Fillbar's maxHeight will cause
@@ -46,11 +59,11 @@ class Fillbar extends StatefulWidget {
   /// ```dart
   /// Container(
   ///   height: 15
-  ///   child: Fillbar.static(value: 100, height: 20) // value overflow => height = maxHeight
+  ///   child: Fillbar.static(value: 50, height: 20) // value overflow => height = maxHeight
   /// )
   /// ```
   /// This will create a full Fillbar with an height of 15.
-  final double? height;
+  final double height;
 
   /// Specifies the Fillbar's maxWidth. Note that this value cannot exceed
   /// the flutter framework's constraints and will be set to maxWidth if
@@ -61,12 +74,36 @@ class Fillbar extends StatefulWidget {
   /// Fillbar.static(value: 100, width: 50) // value overflow => value = width.
   /// ```
   /// This will create a full Fillbar with a value and width of 50.
-  final double? width;
+  final double width;
 
   /// The Fillbar's fill color. This color is used to paint the Fillbar's fill
   /// area. If this value is null this property will use the current theme's primary
   /// color.
   final Color? fillColor;
+
+  /// The Fillbar's background color.
+  final Color backgroundColor;
+
+  /// The Fillbar's border color: if null, it's transparent.
+  final Color borderColor;
+
+  /// This is the color of the space between the outside border and the Fillbar's itself.
+  /// The default value is white.
+  final Color paddingColor;
+
+  /// The external border margin. This value sets the entire Fillbar's margin,
+  /// including the outside frame.
+  final EdgeInsetsGeometry externalMargin;
+
+  /// The padding between the fill part and the outside border.
+  final EdgeInsetsGeometry borderPadding;
+
+  /// The radius property sets the border radius for each container, both the
+  /// external and internal one.
+  final double radius;
+
+  /// The external border width.
+  final double borderWidth;
 
   @override
   State<Fillbar> createState() => _FillbarState();
@@ -79,6 +116,7 @@ class _FillbarState extends State<Fillbar> {
   late double height;
   late Color fillColor;
 
+
   @override
   void initState() {
     super.initState();
@@ -88,24 +126,24 @@ class _FillbarState extends State<Fillbar> {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        if((widget.value ?? 0) > constraints.maxWidth) {
+        if(widget.value > constraints.maxWidth) {
           value = constraints.maxWidth;
         } else {
-          if((widget.value ?? 0) >= (widget.width ?? 0)) {
-            value = (widget.width ?? 0);
+          if(widget.value >= widget.width) {
+            value = widget.width;
           } else {
-            value = widget.value ?? 0;
+            value = widget.value;
           }
         }
-        if((widget.width ?? 0) > constraints.maxWidth) {
+        if(widget.width > constraints.maxWidth) {
           width = constraints.maxWidth;
         } else {
-          width = widget.width ?? 0;
+          width = widget.width;
         }
-        if((widget.height ?? 0) > constraints.maxHeight) {
+        if(widget.height > constraints.maxHeight) {
           height = constraints.maxWidth;
         } else {
-          height = widget.height ?? 0;
+          height = widget.height;
         }
         if(widget.fillColor == null) {
           fillColor = Theme.of(context).colorScheme.primary;
@@ -115,15 +153,32 @@ class _FillbarState extends State<Fillbar> {
         return Container(
           width: width,
           height: height,
-          child: Row(
-            children: [
-              Container(
-                width: value,
-                decoration: BoxDecoration(
-                  color: fillColor
-                ),
-              )
-            ],
+          padding: widget.borderPadding,
+          margin: widget.externalMargin,
+          decoration: BoxDecoration(
+            color: widget.paddingColor,
+            borderRadius: BorderRadius.all(Radius.circular(widget.radius)),
+            border: Border.all(
+              color: widget.borderColor,
+              width: widget.borderWidth
+            )
+          ),
+          child: Container(
+            decoration: BoxDecoration(
+              color: widget.backgroundColor,
+              borderRadius: BorderRadius.all(Radius.circular(widget.radius))
+            ),
+            child: Row(
+              children: [
+                Container(
+                  width: value,
+                  decoration: BoxDecoration(
+                    color: fillColor,
+                    borderRadius: BorderRadius.all(Radius.circular(widget.radius))
+                  ),
+                )
+              ],
+            ),
           ),
         );
       }

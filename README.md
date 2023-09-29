@@ -19,6 +19,7 @@ that fills up over time or by assigning a value variable.
 
 - [Installation](#installation)
 - [Usage](#usage)
+  - [Custom fillbar](#custom-fillbars)
   - [Static fillbar](#static-fillbars)
 
 
@@ -37,6 +38,26 @@ const Fillbar(value: 50, width: 100, height: 20, fillColor: Colors.blue,)
 // Creates a full Fillbar. If not given, the fillColor is set to the primary color.
 const Fillbar.static(value: 100, width: 100, height: 20)
 ```
+
+### Custom fillbars
+
+This uses (almost) every property currently available in this package and the result is shown in the following image.
+
+```dart
+const Fillbar(
+  value: 78,
+  height: 20,
+  width: 120,
+  fillColor: Colors.blue,
+  backgroundColor: Colors.grey,
+  externalMargin: EdgeInsets.all(10),
+  borderPadding: EdgeInsets.all(3),
+  borderWidth: 1.3,
+  radius: 12,
+)
+```
+
+![A custom Fillbar](assets/img.png)
 
 ### Static fillbars
 
