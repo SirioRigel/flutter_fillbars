@@ -76,5 +76,5 @@ If you want, you can even contribute, just open a pull-request and I'll be more 
 ## RoadMad
 
 - [X] Static fillbar
-- [-] Timed fillbar
-- [-] Periodic fillbar
+- Animated fillbar
+- Periodic fillbar

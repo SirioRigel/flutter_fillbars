@@ -1,6 +1,10 @@
 library flutter_fillbars;
 import "package:flutter/material.dart";
 
+enum Direction {
+  toRight, toLeft, toTop, toBottom
+}
+
 class Fillbar extends StatefulWidget {
 
   /// Creates a Fillbar
@@ -16,6 +20,7 @@ class Fillbar extends StatefulWidget {
     this.borderPadding = const EdgeInsets.all(2),
     this.borderWidth = 1.3,
     this.radius = 12,
+    this.direction = Direction.toRight,
     Key? key
   }) : super(key: key);
 
@@ -36,6 +41,7 @@ class Fillbar extends StatefulWidget {
     this.borderPadding = const EdgeInsets.all(2),
     this.borderWidth = 1.3,
     this.radius = 12,
+    this.direction = Direction.toRight,
     Key? key
   }) : super(key: key);
 
@@ -105,6 +111,23 @@ class Fillbar extends StatefulWidget {
   /// The external border width.
   final double borderWidth;
 
+  /// Specifies the fill direction:
+  /// ```dart  
+  /// // A Fillbar which is filled from left to right
+  /// Fillbar.static(value: 50, width: 100, height: 20, direction: Direction.toRight)
+  /// 
+  /// // A Fillbar which is filled from right to left
+  /// Fillbar.static(value: 50, width: 100, height: 20, direction: Direction.toLeft)
+  /// 
+  /// // A Fillbar which fills from top to bottom
+  /// Fillbar.static(value: 50, width: 20, height: 100, direction: Direction.toBottom)
+  /// 
+  /// // A Fillbar which fills from bottom to top
+  /// Fillbar.static(value: 50, width: 100, height: 20, direction: Direction.toTop)
+  /// ```
+  final Direction direction;
+
+
   @override
   State<Fillbar> createState() => _FillbarState();
 }
@@ -116,23 +139,33 @@ class _FillbarState extends State<Fillbar> {
   late double height;
   late Color fillColor;
 
-
   @override
   void initState() {
     super.initState();
   }
-
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        if(widget.value > constraints.maxWidth) {
-          value = constraints.maxWidth;
-        } else {
-          if(widget.value >= widget.width) {
-            value = widget.width;
+        if(widget.direction == Direction.toRight || widget.direction == Direction.toLeft) {
+          if(widget.value > constraints.maxWidth) {
+            value = constraints.maxWidth;
           } else {
-            value = widget.value;
+            if(widget.value >= widget.width) {
+              value = widget.width;
+            } else {
+              value = widget.value;
+            }
+          }
+        } else {
+          if(widget.value > constraints.maxHeight) {
+            value = constraints.maxHeight;
+          } else {
+            if(widget.value >= widget.height) {
+              value = widget.height;
+            } else {
+              value = widget.value;
+            }
           }
         }
         if(widget.width > constraints.maxWidth) {
@@ -168,13 +201,32 @@ class _FillbarState extends State<Fillbar> {
               color: widget.backgroundColor,
               borderRadius: BorderRadius.all(Radius.circular(widget.radius))
             ),
-            child: Row(
+            child:
+            widget.direction == Direction.toRight || widget.direction == Direction.toLeft ?
+            Row(
+              mainAxisAlignment: widget.direction == Direction.toRight ? MainAxisAlignment.start : MainAxisAlignment.end,
               children: [
-                Container(
-                  width: value,
-                  decoration: BoxDecoration(
-                    color: fillColor,
-                    borderRadius: BorderRadius.all(Radius.circular(widget.radius))
+                Flexible(
+                  child: Container(
+                    width: value,
+                    decoration: BoxDecoration(
+                      color: fillColor,
+                      borderRadius: BorderRadius.all(Radius.circular(widget.radius))
+                    ),
+                  ),
+                )
+              ],
+            )
+            : Column(
+              mainAxisAlignment: widget.direction == Direction.toBottom ? MainAxisAlignment.start : MainAxisAlignment.end,
+              children: [
+                Flexible(
+                  child: Container(
+                    height: value,
+                    decoration: BoxDecoration(
+                        color: fillColor,
+                        borderRadius: BorderRadius.all(Radius.circular(widget.radius))
+                    ),
                   ),
                 )
               ],

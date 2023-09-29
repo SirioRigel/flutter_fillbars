@@ -1,4 +1,12 @@
-## 0.0.2
+## 0.2.0
+
+- Added "direction" property: it allows to pick a fill direction: 
+  - Direction.toRight: it's the default one, from left to right
+  - Direction.toLeft: from right to left
+  - Direction.toTop: from bottom to top
+  - Direction.toBottom: from top to bottom
+
+## 0.1.0
 
 - Added "background color" property which is used to set the color of the empty part of the bar
 - Added some border properties border:
