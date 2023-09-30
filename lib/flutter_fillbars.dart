@@ -21,6 +21,8 @@ class Fillbar extends StatefulWidget {
     this.borderWidth = 1.3,
     this.radius = 12,
     this.direction = Direction.toRight,
+    this.duration = const Duration(seconds: 2),
+    this.curve = Curves.easeOutCubic,
     Key? key
   }) : super(key: key);
 
@@ -43,7 +45,9 @@ class Fillbar extends StatefulWidget {
     this.radius = 12,
     this.direction = Direction.toRight,
     Key? key
-  }) : super(key: key);
+  }) : duration = null,
+       curve = null,
+       super(key: key);
 
   /// This is the value (in logical pixels) of the amount filled of the Fillbar
   /// itself.
@@ -112,39 +116,80 @@ class Fillbar extends StatefulWidget {
   final double borderWidth;
 
   /// Specifies the fill direction:
-  /// ```dart  
+  /// ```dart
   /// // A Fillbar which is filled from left to right
   /// Fillbar.static(value: 50, width: 100, height: 20, direction: Direction.toRight)
-  /// 
+  ///
   /// // A Fillbar which is filled from right to left
   /// Fillbar.static(value: 50, width: 100, height: 20, direction: Direction.toLeft)
-  /// 
+  ///
   /// // A Fillbar which fills from top to bottom
   /// Fillbar.static(value: 50, width: 20, height: 100, direction: Direction.toBottom)
-  /// 
+  ///
   /// // A Fillbar which fills from bottom to top
-  /// Fillbar.static(value: 50, width: 100, height: 20, direction: Direction.toTop)
+  /// Fillbar.static(value: 50, width: 20, height: 100, direction: Direction.toTop)
   /// ```
   final Direction direction;
 
+  /// Specifies the duration of the animation. The default value is 2 seconds
+  final Duration? duration;
+
+  /// Sets the type of curve to use when animating the bar filling up.
+  /// ```dart
+  /// Curves.linear // Linear animation
+  /// Curves.easeOutCubic // Fills up and slows at x^3 ratio
+  /// Curves.easeInQuadratic // Fills up and speeds up at x^2 ratio
+  /// ```
+  /// 
+  /// The dafault curve used for the animation is Curves.easeOutCubic
+  final Curve? curve;
 
   @override
   State<Fillbar> createState() => _FillbarState();
 }
 
-class _FillbarState extends State<Fillbar> {
+class _FillbarState extends State<Fillbar> with TickerProviderStateMixin{
 
   late double value;
   late double width;
   late double height;
+
   late Color fillColor;
+
+  late final AnimationController _fillController;
+  late final Animation<double> _fillAnimation;
 
   @override
   void initState() {
+    if(widget.duration != null && widget.curve != null) {
+      _fillController = AnimationController(
+          duration: widget.duration,
+          vsync: this
+      );
+      _fillAnimation = CurvedAnimation(
+          parent: _fillController,
+          curve: widget.curve!
+      );
+    } else {
+      _fillController = AnimationController(
+        vsync: this,
+        duration: Duration.zero
+      );
+      _fillAnimation = CurvedAnimation(
+        curve: Curves.linear,
+        parent: _fillController
+      );
+    }
+    _fillController.forward();
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
+    if(_fillController.isCompleted) {
+      _fillController.reset();
+      _fillController.forward();
+    }
     return LayoutBuilder(
       builder: (context, constraints) {
         if(widget.direction == Direction.toRight || widget.direction == Direction.toLeft) {
@@ -207,11 +252,15 @@ class _FillbarState extends State<Fillbar> {
               mainAxisAlignment: widget.direction == Direction.toRight ? MainAxisAlignment.start : MainAxisAlignment.end,
               children: [
                 Flexible(
-                  child: Container(
-                    width: value,
-                    decoration: BoxDecoration(
-                      color: fillColor,
-                      borderRadius: BorderRadius.all(Radius.circular(widget.radius))
+                  child: SizeTransition(
+                    sizeFactor: _fillAnimation,
+                    axis: Axis.horizontal,
+                    child: Container(
+                      width: value,
+                      decoration: BoxDecoration(
+                        color: fillColor,
+                        borderRadius: BorderRadius.all(Radius.circular(widget.radius))
+                      ),
                     ),
                   ),
                 )
@@ -221,11 +270,15 @@ class _FillbarState extends State<Fillbar> {
               mainAxisAlignment: widget.direction == Direction.toBottom ? MainAxisAlignment.start : MainAxisAlignment.end,
               children: [
                 Flexible(
-                  child: Container(
-                    height: value,
-                    decoration: BoxDecoration(
-                        color: fillColor,
-                        borderRadius: BorderRadius.all(Radius.circular(widget.radius))
+                  child: SizeTransition(
+                    sizeFactor: _fillAnimation,
+                    axis: Axis.vertical,
+                    child: Container(
+                      height: value,
+                      decoration: BoxDecoration(
+                          color: fillColor,
+                          borderRadius: BorderRadius.all(Radius.circular(widget.radius))
+                      ),
                     ),
                   ),
                 )

@@ -1,6 +1,14 @@
+## 0.3.0 
+
+- Added animation features:
+  - duration: sets the duration of the animation
+  - curve: sets the type of animation curve to use
+
+- A static fillbar doesn't have a duration or curve property; this ensures that there is no animation
+
 ## 0.2.0
 
-- Added "direction" property: it allows to pick a fill direction: 
+- Added "direction" property which it allows to pick a fill direction and it's useful to specify weather the fill bar should be vertical or horizontal: 
   - Direction.toRight: it's the default one, from left to right
   - Direction.toLeft: from right to left
   - Direction.toTop: from bottom to top

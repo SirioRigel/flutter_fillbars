@@ -21,6 +21,7 @@ that fills up over time or by assigning a value variable.
 - [Usage](#usage)
   - [Custom fillbar](#custom-fillbars)
   - [Static fillbar](#static-fillbars)
+  - [Animated fillbar](#animated-fillbar)
 
 
 ## Installation
@@ -41,7 +42,7 @@ const Fillbar.static(value: 100, width: 100, height: 20)
 
 ### Custom fillbars
 
-This uses (almost) every property currently available in this package and the result is shown in the following image.
+The following code shows a custom fillbar. 
 
 ```dart
 const Fillbar(
@@ -61,12 +62,25 @@ const Fillbar(
 
 ### Static fillbars
 
-A static Fillbar the simplest type of Fillbar: it doesn't need an animation. Note that a value is required to be passed.
+A static Fillbar the simplest type of Fillbar: it doesn't have an animation. This is made so you don't have to esplicitely put `curve = null` or `duration = null` if you don't want any animation.
+Note that a value is required to be passed.
 
 ```dart
 // Creates a full Fillbar
 const Fillbar.static(value: 100, width: 100, height: 20, fillColor: Colors.amber)
 ```
+
+### Animated fillbar
+
+A fillbar can also be animated: the following code shows how to create a fully animated fillbar which, everytime the value is changed, will react by animating the fill process.
+
+```dart
+// Creates an animated 
+```
+
+Here is the result:
+
+![A fully animated fillbar](assets/Animation.mp4)
 
 ## Additional information
 
@@ -75,6 +89,6 @@ If you want, you can even contribute, just open a pull-request and I'll be more 
 
 ## RoadMad
 
-- [X] Static fillbar
-- Animated fillbar
+- :heavy_check_mark: Static fillbar
+- :heavy_check_mark: Animated fillbar
 - Periodic fillbar
