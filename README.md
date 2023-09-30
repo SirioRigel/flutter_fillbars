@@ -12,8 +12,8 @@ and the Flutter guide for
 -->
 # Fillbars
 
-`flutter_fillbars` is a simple flutter package that allows you to create a containers 
-that fills up over time or by assigning a value variable.
+`flutter_fillbars` is a simple flutter package that allows you to create a container animatedely 
+fills up when the value changes.
 
 ## Contents
 
