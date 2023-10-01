@@ -1,3 +1,10 @@
+## 0.4.0
+
+- Added a periodic fillbar with a new property:
+  - periodic:either true or false, it creates a fillbar with a periodic animation if true
+- Fixed a bug with the filling animation: at the beginning of the animation the "fill area" would just go 
+out of the left bounds.
+
 ## 0.3.0 
 
 - Added animation features:

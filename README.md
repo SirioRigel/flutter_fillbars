@@ -22,6 +22,7 @@ fills animatedly when the given value changes.
   - [Custom fillbar](#custom-fillbars)
   - [Static fillbar](#static-fillbars)
   - [Animated fillbar](#animated-fillbar)
+  - [Periodic fillbar](#periodic-fillbar)
 
 
 ## Installation
@@ -75,12 +76,41 @@ const Fillbar.static(value: 100, width: 100, height: 20, fillColor: Colors.amber
 A fillbar can also be animated: the following code shows how to create a fully animated fillbar which, everytime the value is changed, will react by animating the fill process.
 
 ```dart
-// Creates an animated 
+// Creates an animated fillbar
+const Fillbar(
+  value: value,
+  height: 30,
+  width: 180,
+  fillColor: Colors.blue,
+  backgroundColor: Colors.grey,
+  radius: 12,
+  direction: Direction.toRight,
+  duration: Duration(seconds: 2),
+  curve: Curves.easeOutCubic
+)
 ```
 
 Here is the result:
 
 ![A fully animated fillbar](assets/Animation.mp4)
+
+### Periodic fillbar
+
+Creates an animated fillbar with a specific periodicity.  
+```dart
+// Creates a periodic fillbar
+Fillbar.periodic(
+  value: value,
+  height: 30,
+  width: 180,
+  fillColor: Colors.blue,
+  backgroundColor: Colors.grey,
+  radius: 12,
+  direction: Direction.toRight,
+)
+```
+
+![A periodic fillbar](assets/periodic.mp4)
 
 ## Additional information
 
@@ -91,4 +121,4 @@ If you want, you can even contribute, just open a pull-request and I'll be more 
 
 - :heavy_check_mark: Static fillbar
 - :heavy_check_mark: Animated fillbar
-- Periodic fillbar
+- :heavy_check_mark: Periodic fillbar

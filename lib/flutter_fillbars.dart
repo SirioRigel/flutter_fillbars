@@ -23,6 +23,7 @@ class Fillbar extends StatefulWidget {
     this.direction = Direction.toRight,
     this.duration = const Duration(seconds: 2),
     this.curve = Curves.easeOutCubic,
+    this.periodic = false,
     Key? key
   }) : super(key: key);
 
@@ -47,7 +48,34 @@ class Fillbar extends StatefulWidget {
     Key? key
   }) : duration = null,
        curve = null,
+       periodic = false,
        super(key: key);
+
+  /// Creates a periodic Fillbar which will be animated forever with a periodicity of
+  /// 2 times the duration of the animation.
+  /// ```dart
+  /// Fillbar.periodic(value: 40)
+  /// ```
+  /// The fillbar will be filled to a value of 40, which is 40%, and then will be
+  /// emptied periodically every animation cycle.
+  const Fillbar.periodic({
+    required this.value,
+    this.height = 17,
+    this.width = 100,
+    this.fillColor,
+    this.backgroundColor = const Color(0xFFCDCDCD),
+    this.borderColor = const Color(0x00000000),
+    this.paddingColor = const Color(0x00000000),
+    this.externalMargin = const EdgeInsets.all(8),
+    this.borderPadding = const EdgeInsets.all(2),
+    this.borderWidth = 1.3,
+    this.radius = 12,
+    this.direction = Direction.toRight,
+    this.duration = const Duration(seconds: 2),
+    this.curve = Curves.easeOutCubic,
+    this.periodic = true,
+    Key? key
+  }) : super(key: key);
 
   /// This is the value (in logical pixels) of the amount filled of the Fillbar
   /// itself.
@@ -140,9 +168,17 @@ class Fillbar extends StatefulWidget {
   /// Curves.easeOutCubic // Fills up and slows at x^3 ratio
   /// Curves.easeInQuadratic // Fills up and speeds up at x^2 ratio
   /// ```
-  /// 
-  /// The dafault curve used for the animation is Curves.easeOutCubic
+  ///
+  /// The default curve used for the animation is Curves.easeOutCubic
   final Curve? curve;
+
+  /// Specifies the period of the animation.
+  /// ```dart
+  /// Fillbar.periodic(value: 40)
+  /// ```
+  /// The fillbar will be filled to a value of 40, which is 40%, and then will be
+  /// emptied periodically every animation cycle.
+  final bool periodic;
 
   @override
   State<Fillbar> createState() => _FillbarState();
@@ -162,10 +198,17 @@ class _FillbarState extends State<Fillbar> with TickerProviderStateMixin{
   @override
   void initState() {
     if(widget.duration != null && widget.curve != null) {
-      _fillController = AnimationController(
-          duration: widget.duration,
-          vsync: this
-      );
+      if(widget.periodic) {
+        _fillController = AnimationController(
+            duration: widget.duration,
+            vsync: this
+        )..repeat(reverse: true);
+      } else {
+        _fillController = AnimationController(
+            duration: widget.duration,
+            vsync: this
+        );
+      }
       _fillAnimation = CurvedAnimation(
           parent: _fillController,
           curve: widget.curve!
@@ -180,13 +223,21 @@ class _FillbarState extends State<Fillbar> with TickerProviderStateMixin{
         parent: _fillController
       );
     }
-    _fillController.forward();
+    if(!widget.periodic) {
+      _fillController.forward();
+    }
     super.initState();
   }
 
   @override
+  void dispose() {
+    _fillController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    if(_fillController.isCompleted) {
+    if(_fillController.isCompleted && !widget.periodic) {
       _fillController.reset();
       _fillController.forward();
     }
@@ -255,6 +306,7 @@ class _FillbarState extends State<Fillbar> with TickerProviderStateMixin{
                   child: SizeTransition(
                     sizeFactor: _fillAnimation,
                     axis: Axis.horizontal,
+                    axisAlignment: -1,
                     child: Container(
                       width: value,
                       decoration: BoxDecoration(
@@ -273,6 +325,7 @@ class _FillbarState extends State<Fillbar> with TickerProviderStateMixin{
                   child: SizeTransition(
                     sizeFactor: _fillAnimation,
                     axis: Axis.vertical,
+                    axisAlignment: -1,
                     child: Container(
                       height: value,
                       decoration: BoxDecoration(
