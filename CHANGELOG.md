@@ -1,3 +1,9 @@
+## 0.4.1
+
+- Minor tweaks to code
+- Added a the first package example.
+- Tweaks to readme.
+
 ## 0.4.0
 
 - Added a periodic fillbar with a new property:

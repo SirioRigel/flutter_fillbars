@@ -306,7 +306,7 @@ class _FillbarState extends State<Fillbar> with TickerProviderStateMixin{
                   child: SizeTransition(
                     sizeFactor: _fillAnimation,
                     axis: Axis.horizontal,
-                    axisAlignment: -1,
+                    axisAlignment: widget.direction == Direction.toRight ? -1 : 1,
                     child: Container(
                       width: value,
                       decoration: BoxDecoration(
@@ -325,7 +325,7 @@ class _FillbarState extends State<Fillbar> with TickerProviderStateMixin{
                   child: SizeTransition(
                     sizeFactor: _fillAnimation,
                     axis: Axis.vertical,
-                    axisAlignment: -1,
+                    axisAlignment: widget.direction == Direction.toBottom ? -1 : 1,
                     child: Container(
                       height: value,
                       decoration: BoxDecoration(

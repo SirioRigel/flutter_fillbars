@@ -1,15 +1,3 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
-
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/guides/libraries/writing-package-pages).
-
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-library-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/developing-packages).
--->
 # Fillbars
 
 `flutter_fillbars` is a simple flutter package that allows you to create a container which
@@ -23,6 +11,8 @@ fills animatedly when the given value changes.
   - [Static fillbar](#static-fillbars)
   - [Animated fillbar](#animated-fillbar)
   - [Periodic fillbar](#periodic-fillbar)
+- [Examples](#examples)
+- [Additional information](#additional-information)
 
 
 ## Installation
@@ -112,13 +102,23 @@ Fillbar.periodic(
 
 ![A periodic fillbar](assets/periodic.mp4)
 
+## Examples
+
+See [examples](examples) for some basic examples.
+
 ## Additional information
 
 Please share and star this repository if you liked it. 
 If you want, you can even contribute, just open a pull-request and I'll be more than happy to review it.
+
+[Follow me on twitter](https://twitter.com/sirio_rigel)
+<a href="https://www.buymeacoffee.com/tommasomiliani" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
 
 ## RoadMad
 
 - :heavy_check_mark: Static fillbar
 - :heavy_check_mark: Animated fillbar
 - :heavy_check_mark: Periodic fillbar
+- :heavy_check_mark: Simple Example
+- [] Text over fillbar
+- [] Package up on Pub.dev
