@@ -12,6 +12,7 @@ class Fillbar extends StatefulWidget {
     required this.value,
     this.height = 17,
     this.width = 100,
+    this.text = const Text("0"),
     this.fillColor,
     this.backgroundColor = const Color(0xFFCDCDCD),
     this.borderColor = const Color(0x00000000),
@@ -36,6 +37,7 @@ class Fillbar extends StatefulWidget {
     required this.value,
     this.height = 17,
     this.width = 100,
+    this.text = const Text("0"),
     this.fillColor,
     this.backgroundColor = const Color(0xFFCDCDCD),
     this.borderColor = const Color(0x00000000),
@@ -62,6 +64,7 @@ class Fillbar extends StatefulWidget {
     required this.value,
     this.height = 17,
     this.width = 100,
+    this.text = const Text("0"),
     this.fillColor,
     this.backgroundColor = const Color(0xFFCDCDCD),
     this.borderColor = const Color(0x00000000),
@@ -180,6 +183,17 @@ class Fillbar extends StatefulWidget {
   /// emptied periodically every animation cycle.
   final bool periodic;
 
+  /// Adds a text centered over the Fillbar's fill area.
+  /// ```dart
+  /// Fillbar(value: 100, width: 200, text: null) // nothing shown
+  ///
+  /// Fillbar(value: 100, width: 200) // 50%
+  /// ```
+  /// By default this property is not null. It has, in fact, a default value of
+  /// Text("0"). If no other value is passed, it will pick the current value of the
+  /// Fillbar and will write it as a percentage (int). If it's null, no value is displayed.
+  final Text? text;
+
   @override
   State<Fillbar> createState() => _FillbarState();
 }
@@ -194,6 +208,8 @@ class _FillbarState extends State<Fillbar> with TickerProviderStateMixin{
 
   late final AnimationController _fillController;
   late final Animation<double> _fillAnimation;
+
+  late Text text;
 
   @override
   void initState() {
@@ -226,6 +242,7 @@ class _FillbarState extends State<Fillbar> with TickerProviderStateMixin{
     if(!widget.periodic) {
       _fillController.forward();
     }
+    text = const Text("");
     super.initState();
   }
 
@@ -279,6 +296,27 @@ class _FillbarState extends State<Fillbar> with TickerProviderStateMixin{
         } else {
           fillColor = widget.fillColor!;
         }
+        if(widget.text != null) {
+          if(widget.text!.data == "0") {
+            if(widget.direction == Direction.toRight || widget.direction == Direction.toLeft) {
+              text = Text(
+                "${((value / width) * 100).toInt()} %",
+                style: const TextStyle(
+                  color: Colors.white
+                ),
+              );
+            } else {
+              text = Text(
+                "${((value / height) * 100).toInt()} %",
+                style: const TextStyle(
+                    color: Colors.white
+                ),
+              );
+            }
+          } else {
+            text = widget.text!;
+          }
+        }
         return Container(
           width: width,
           height: height,
@@ -313,6 +351,9 @@ class _FillbarState extends State<Fillbar> with TickerProviderStateMixin{
                         color: fillColor,
                         borderRadius: BorderRadius.all(Radius.circular(widget.radius))
                       ),
+                      child: Center(
+                        child: text
+                      ),
                     ),
                   ),
                 )
@@ -331,6 +372,9 @@ class _FillbarState extends State<Fillbar> with TickerProviderStateMixin{
                       decoration: BoxDecoration(
                           color: fillColor,
                           borderRadius: BorderRadius.all(Radius.circular(widget.radius))
+                      ),
+                      child: Center(
+                          child: text
                       ),
                     ),
                   ),

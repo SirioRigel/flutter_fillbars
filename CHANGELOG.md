@@ -1,3 +1,10 @@
+## 0.4.2
+
+- Added text over fillbar:
+  - text: if the property is null, no text is shown
+- Minor fixes
+- Updated example 1 with new code: now the fillbar will react to the floating action button
+
 ## 0.4.1
 
 - Minor tweaks to code

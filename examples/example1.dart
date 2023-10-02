@@ -27,6 +27,8 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
 
+  double value = 100;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,18 +46,18 @@ class _MyHomePageState extends State<MyHomePage> {
               width: 180,
               fillColor: Colors.blue,
             ),
-            const Fillbar(
-              value: 110,
+            Fillbar(
+              value: value,
               height: 30,
               width: 180,
               fillColor: Colors.amber,
               direction: Direction.toLeft,
             ),
-            Fillbar(
+            const Fillbar(
               value: 130,
               height: 30,
               width: 180,
-              fillColor: Colors.green.shade700,
+              fillColor: Colors.green,
             ),
             const Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -85,6 +87,14 @@ class _MyHomePageState extends State<MyHomePage> {
             )
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          setState(() {
+            value += 5;
+          });
+        },
+        child: const Icon(Icons.add),
       ),
     );
   }

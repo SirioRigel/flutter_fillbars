@@ -120,5 +120,5 @@ If you want, you can even contribute, just open a pull-request and I'll be more 
 - :heavy_check_mark: Animated fillbar
 - :heavy_check_mark: Periodic fillbar
 - :heavy_check_mark: Simple Example
-- [] Text over fillbar
+- :heavy_check_mark: Text over fillbar
 - [] Package up on Pub.dev
