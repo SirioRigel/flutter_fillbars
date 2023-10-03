@@ -133,3 +133,4 @@ If you want, you can even contribute, just open a pull-request and I'll be more 
 - :heavy_check_mark: Simple Example
 - :heavy_check_mark: Text over fillbar
 - :heavy_check_mark: Package up on Pub.dev
+- [] Add a color gradient in fill area
