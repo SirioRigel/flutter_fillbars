@@ -1,7 +1,7 @@
 # Fillbars
 
 `flutter_fillbars` is a simple flutter package that allows you to create a container which
-fills animatedly when the given value changes.
+fills animatedly.
 
 ## Contents
 
@@ -17,11 +17,19 @@ fills animatedly when the given value changes.
 
 ## Installation
 
-To do.
+Get this package by running this line in your local terminal:
+```dart
+$ flutter pub add flutter_fillbars: ^1.0.0
+```
+
+Or by adding this to pubspec.yaml:
+```dart
+flutter_fillbars: ^1.0.0
+```
 
 ## Usage
 
-A Fillbar is highly customizable. However I've create a few presets that will you pick the Fillbar which suits your needs. Here are some usage examples
+A Fillbar is highly customizable. However I've create a few presets that will let you pick the Fillbar which suits your needs. Here are some usage examples
 
 ```dart
 //  Creates an half full Fillbar
@@ -46,6 +54,7 @@ const Fillbar(
   borderPadding: EdgeInsets.all(3),
   borderWidth: 1.3,
   radius: 12,
+  text: null
 )
 ```
 
@@ -76,7 +85,8 @@ const Fillbar(
   radius: 12,
   direction: Direction.toRight,
   duration: Duration(seconds: 2),
-  curve: Curves.easeOutCubic
+  curve: Curves.easeOutCubic,
+  text: null
 )
 ```
 
@@ -97,6 +107,7 @@ Fillbar.periodic(
   backgroundColor: Colors.grey,
   radius: 12,
   direction: Direction.toRight,
+  text: null
 )
 ```
 
@@ -104,7 +115,7 @@ Fillbar.periodic(
 
 ## Examples
 
-See [examples](examples) for some basic examples.
+See [examples](example) for some basic examples.
 
 ## Additional information
 
@@ -121,4 +132,4 @@ If you want, you can even contribute, just open a pull-request and I'll be more 
 - :heavy_check_mark: Periodic fillbar
 - :heavy_check_mark: Simple Example
 - :heavy_check_mark: Text over fillbar
-- [] Package up on Pub.dev
+- :heavy_check_mark: Package up on Pub.dev

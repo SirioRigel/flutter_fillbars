@@ -1,3 +1,7 @@
+## 1.0.0
+
+Released the package on pub.dev!
+
 ## 0.4.2
 
 - Added text over fillbar:

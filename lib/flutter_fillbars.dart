@@ -80,23 +80,22 @@ class Fillbar extends StatefulWidget {
     Key? key
   }) : super(key: key);
 
-  /// This is the value (in logical pixels) of the amount filled of the Fillbar
-  /// itself.
+  /// This is the value (in logical pixels) of the Fillbar's fill-area.
   /// ```dart
   /// Fillbar.static(value: 100, width: 200)
   /// ```
   /// This creates a simple static Fillbar that is half full. It is also
-  /// possible to pass a value to it that changes throughout the course of the
+  /// possible to pass a value that changes throughout the course of the
   /// application lifecycle. The Fillbar will be automatically updated.
   /// If the value is greater than the constraints given by the flutter framework,
-  /// the widget will adjust itself to the maxWidth allowed.
+  /// the widget will adjust itself to the maxWidth allowed if horizontal, or maxHeigth if vertical.
   final double value;
 
   /// Specifies the external height of the Fillbar. Note that this value cannot exceed
   /// the flutter framework's constraints and will be set to maxHeight if
   /// it does so.
   /// Giving an height which is bigger than the Fillbar's maxHeight will cause
-  /// the height to be set to the constraints max height.
+  /// the height to be set to the constraints max height to prevent overflowing.
   /// ```dart
   /// Container(
   ///   height: 15
@@ -110,7 +109,7 @@ class Fillbar extends StatefulWidget {
   /// the flutter framework's constraints and will be set to maxWidth if
   /// it does so.
   /// Giving a width which is smaller than the Fillbar's passed value will cause
-  /// the width to be set to the value itself.
+  /// the width to be set to the value itself to prevent overflowing.
   /// ```dart
   /// Fillbar.static(value: 100, width: 50) // value overflow => value = width.
   /// ```
@@ -175,7 +174,7 @@ class Fillbar extends StatefulWidget {
   /// The default curve used for the animation is Curves.easeOutCubic
   final Curve? curve;
 
-  /// Specifies the period of the animation.
+  /// Specifies if the Fillbar should animate periodically.
   /// ```dart
   /// Fillbar.periodic(value: 40)
   /// ```
