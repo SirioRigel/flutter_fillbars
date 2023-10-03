@@ -1,3 +1,7 @@
+## 1.0.1
+
+Fixed a minor issue
+
 ## 1.0.0
 
 Released the package on pub.dev!
