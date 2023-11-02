@@ -1,3 +1,10 @@
+## 1.1.0
+
+- Added circular fillbar:
+  - It's a fillbar that fills clockWise or antiClockWise
+  - The "radius" property sets the fillbar's radius
+  - The value property needs to be between 0 and 2*pie.
+
 ## 1.0.1
 
 Fixed a minor issue
