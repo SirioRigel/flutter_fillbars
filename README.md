@@ -121,7 +121,8 @@ Note that the value property should be between 0 - 2*PI (0 - 6.28...).
 // Creates a simple circular fillbar
 Fillbar.circular(
   value: math.pi *  13 / 8,
-   radius: 50
+  radius: 50,
+  direction: Direction.antiClockWise
 )
 ```
 
