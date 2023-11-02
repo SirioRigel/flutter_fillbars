@@ -11,6 +11,7 @@ fills animatedly.
   - [Static fillbar](#static-fillbars)
   - [Animated fillbar](#animated-fillbar)
   - [Periodic fillbar](#periodic-fillbar)
+  - [Circular fillbar](#circular-fillbar)
 - [Examples](#examples)
 - [Additional information](#additional-information)
 
@@ -113,6 +114,19 @@ Fillbar.periodic(
 
 ![A periodic fillbar](assets/periodic.mp4)
 
+### Circular fillbar
+Creates an circular fillbar with a specific fill direction and a radius.
+Note that the value property should be between 0 - 2*PI (0 - 6.28...).
+```dart
+// Creates a simple circular fillbar
+Fillbar.circular(
+  value: math.pi *  13 / 8,
+   radius: 50
+)
+```
+
+![A circular fillbar](assets/circular_fillbar.png)
+
 ## Examples
 
 See [examples](example) for some basic examples.
@@ -133,4 +147,5 @@ If you want, you can even contribute, just open a pull-request and I'll be more 
 - :heavy_check_mark: Simple Example
 - :heavy_check_mark: Text over fillbar
 - :heavy_check_mark: Package up on Pub.dev
+- :heavy_check_mark: Added a circular fillbar
 - [] Add a color gradient in fill area

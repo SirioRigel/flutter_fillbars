@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import "package:flutter_fillbars/flutter_fillbars.dart";
+import "dart:math" as math;
 
 void main() {
   runApp(const MyApp());
@@ -83,6 +84,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   fillColor: Colors.cyan,
                   direction: Direction.toBottom,
                 ),
+                Fillbar.circular(value: math.pi *  13 / 8, radius: 50)
               ],
             )
           ],

@@ -1,8 +1,9 @@
 library flutter_fillbars;
 import "package:flutter/material.dart";
+import "dart:math" as math;
 
 enum Direction {
-  toRight, toLeft, toTop, toBottom
+  toRight, toLeft, toTop, toBottom, clockWise, antiClockWise
 }
 
 class Fillbar extends StatefulWidget {
@@ -10,6 +11,7 @@ class Fillbar extends StatefulWidget {
   /// Creates a Fillbar
   const Fillbar({
     required this.value,
+    this.radius = 0,
     this.height = 17,
     this.width = 100,
     this.text = const Text("0"),
@@ -20,7 +22,7 @@ class Fillbar extends StatefulWidget {
     this.externalMargin = const EdgeInsets.all(8),
     this.borderPadding = const EdgeInsets.all(2),
     this.borderWidth = 1.3,
-    this.radius = 12,
+    this.borderRadius = 12,
     this.direction = Direction.toRight,
     this.duration = const Duration(seconds: 2),
     this.curve = Curves.easeOutCubic,
@@ -35,6 +37,7 @@ class Fillbar extends StatefulWidget {
   /// This is simple half full Fillbar.
   const Fillbar.static({
     required this.value,
+    this.radius = 0,
     this.height = 17,
     this.width = 100,
     this.text = const Text("0"),
@@ -45,7 +48,7 @@ class Fillbar extends StatefulWidget {
     this.externalMargin = const EdgeInsets.all(8),
     this.borderPadding = const EdgeInsets.all(2),
     this.borderWidth = 1.3,
-    this.radius = 12,
+    this.borderRadius = 12,
     this.direction = Direction.toRight,
     Key? key
   }) : duration = null,
@@ -62,6 +65,7 @@ class Fillbar extends StatefulWidget {
   /// emptied periodically every animation cycle.
   const Fillbar.periodic({
     required this.value,
+    this.radius = 0,
     this.height = 17,
     this.width = 100,
     this.text = const Text("0"),
@@ -72,7 +76,7 @@ class Fillbar extends StatefulWidget {
     this.externalMargin = const EdgeInsets.all(8),
     this.borderPadding = const EdgeInsets.all(2),
     this.borderWidth = 1.3,
-    this.radius = 12,
+    this.borderRadius = 12,
     this.direction = Direction.toRight,
     this.duration = const Duration(seconds: 2),
     this.curve = Curves.easeOutCubic,
@@ -80,22 +84,68 @@ class Fillbar extends StatefulWidget {
     Key? key
   }) : super(key: key);
 
-  /// This is the value (in logical pixels) of the Fillbar's fill-area.
+  /// Creates a round Fillbar:
+  ///```dart
+  /// Fillbar.circular(value: math.pi) // Half filled
+  /// Fillbar.circular(value: math.pi / 2) // Quarter filled
+  /// Fillbar.circular(value: math.pi * 2) // Full
+  /// ```
+  /// Note that the angle should be passed as a fraction of 2PI. (which is 6.28...)
+  const Fillbar.circular({
+    required this.value,
+    this.radius = 50,
+    this.height = 0,
+    this.width = 0,
+    this.text = const Text("0"),
+    this.fillColor,
+    this.backgroundColor = const Color(0xFFCDCDCD),
+    this.borderColor = const Color(0x00000000),
+    this.paddingColor = const Color(0x00000000),
+    this.externalMargin = const EdgeInsets.all(8),
+    this.borderPadding = const EdgeInsets.all(2),
+    this.borderWidth = 1.3,
+    this.borderRadius = 100,
+    this.direction = Direction.clockWise,
+    this.duration = const Duration(seconds: 2),
+    this.curve = Curves.easeOutCubic,
+    this.periodic = false,
+    Key? key
+  }) :  super(key: key);
+
+  /// This is the value (in logical pixels) of the amount filled of the Fillbar
+  /// itself.
   /// ```dart
   /// Fillbar.static(value: 100, width: 200)
   /// ```
   /// This creates a simple static Fillbar that is half full. It is also
-  /// possible to pass a value that changes throughout the course of the
+  /// possible to pass a value to it that changes throughout the course of the
   /// application lifecycle. The Fillbar will be automatically updated.
   /// If the value is greater than the constraints given by the flutter framework,
-  /// the widget will adjust itself to the maxWidth allowed if horizontal, or maxHeigth if vertical.
+  /// the widget will adjust itself to the maxWidth allowed.
   final double value;
+
+  /// This property specifies the radius of the circular fillbar. The default value is 25
+  /// for a circular fillbar, but zero for a non circular one.
+  ///
+  /// ```dart
+  /// // This is not valid. If radius > 0 the fillbar will be circular
+  /// Fillbar(value: 100, radius: 100, width: 200, height 100)
+  ///
+  /// Fillbar.circular(value: 100, radius: 100)
+  /// ```
+  /// The way value is calculated depends on the radius: if the value > 2*PI*radius than the
+  /// max value will be set to 2*PI*radius. If it's lower, it will be the proportion.
+  /// ```dart
+  /// // the amount filled will be around 15.9...%
+  /// Fillbar.circular(value: 100, radius: 100)
+  /// ```
+  final double radius;
 
   /// Specifies the external height of the Fillbar. Note that this value cannot exceed
   /// the flutter framework's constraints and will be set to maxHeight if
   /// it does so.
   /// Giving an height which is bigger than the Fillbar's maxHeight will cause
-  /// the height to be set to the constraints max height to prevent overflowing.
+  /// the height to be set to the constraints max height.
   /// ```dart
   /// Container(
   ///   height: 15
@@ -109,7 +159,7 @@ class Fillbar extends StatefulWidget {
   /// the flutter framework's constraints and will be set to maxWidth if
   /// it does so.
   /// Giving a width which is smaller than the Fillbar's passed value will cause
-  /// the width to be set to the value itself to prevent overflowing.
+  /// the width to be set to the value itself.
   /// ```dart
   /// Fillbar.static(value: 100, width: 50) // value overflow => value = width.
   /// ```
@@ -140,7 +190,7 @@ class Fillbar extends StatefulWidget {
 
   /// The radius property sets the border radius for each container, both the
   /// external and internal one.
-  final double radius;
+  final double borderRadius;
 
   /// The external border width.
   final double borderWidth;
@@ -174,7 +224,7 @@ class Fillbar extends StatefulWidget {
   /// The default curve used for the animation is Curves.easeOutCubic
   final Curve? curve;
 
-  /// Specifies if the Fillbar should animate periodically.
+  /// Specifies the period of the animation.
   /// ```dart
   /// Fillbar.periodic(value: 40)
   /// ```
@@ -202,8 +252,13 @@ class _FillbarState extends State<Fillbar> with TickerProviderStateMixin{
   late double value;
   late double width;
   late double height;
+  late double radius;
+
+  late bool isCircular;
 
   late Color fillColor;
+
+  late Direction fillDirection;
 
   late final AnimationController _fillController;
   late final Animation<double> _fillAnimation;
@@ -212,6 +267,22 @@ class _FillbarState extends State<Fillbar> with TickerProviderStateMixin{
 
   @override
   void initState() {
+    if(widget.radius > 0) {
+      isCircular = true;
+      if(widget.direction != Direction.clockWise && widget.direction != Direction.antiClockWise) {
+        fillDirection = Direction.clockWise;
+      } else {
+        fillDirection = widget.direction;
+      }
+    } else {
+      if(widget.direction == Direction.clockWise || widget.direction == Direction.antiClockWise) {
+        fillDirection = Direction.toRight;
+      } else {
+        fillDirection = widget.direction;
+      }
+      isCircular = false;
+    }
+    radius = widget.radius;
     if(widget.duration != null && widget.curve != null) {
       if(widget.periodic) {
         _fillController = AnimationController(
@@ -259,24 +330,38 @@ class _FillbarState extends State<Fillbar> with TickerProviderStateMixin{
     }
     return LayoutBuilder(
       builder: (context, constraints) {
-        if(widget.direction == Direction.toRight || widget.direction == Direction.toLeft) {
-          if(widget.value > constraints.maxWidth) {
-            value = constraints.maxWidth;
+        if(isCircular) {
+          if(widget.radius > constraints.maxWidth) {
+            radius = constraints.maxWidth / 2;
+          }
+          if(widget.radius > constraints.maxHeight) {
+            radius = constraints.maxHeight / 2;
+          }
+          if(widget.value > (2*math.pi*radius)) {
+            value = (2*math.pi*radius);
           } else {
-            if(widget.value >= widget.width) {
-              value = widget.width;
-            } else {
-              value = widget.value;
-            }
+            value = widget.value;
           }
         } else {
-          if(widget.value > constraints.maxHeight) {
-            value = constraints.maxHeight;
-          } else {
-            if(widget.value >= widget.height) {
-              value = widget.height;
+          if(widget.direction == Direction.toRight || widget.direction == Direction.toLeft) {
+            if(widget.value > constraints.maxWidth) {
+              value = constraints.maxWidth;
             } else {
-              value = widget.value;
+              if(widget.value >= widget.width) {
+                value = widget.width;
+              } else {
+                value = widget.value;
+              }
+            }
+          } else {
+            if(widget.value > constraints.maxHeight) {
+              value = constraints.maxHeight;
+            } else {
+              if(widget.value >= widget.height) {
+                value = widget.height;
+              } else {
+                value = widget.value;
+              }
             }
           }
         }
@@ -297,14 +382,14 @@ class _FillbarState extends State<Fillbar> with TickerProviderStateMixin{
         }
         if(widget.text != null) {
           if(widget.text!.data == "0") {
-            if(widget.direction == Direction.toRight || widget.direction == Direction.toLeft) {
+            if(fillDirection == Direction.toRight || fillDirection == Direction.toLeft) {
               text = Text(
                 "${((value / width) * 100).toInt()} %",
                 style: const TextStyle(
                   color: Colors.white
                 ),
               );
-            } else {
+            } else if(fillDirection == Direction.toTop || fillDirection == Direction.toBottom) {
               text = Text(
                 "${((value / height) * 100).toInt()} %",
                 style: const TextStyle(
@@ -317,13 +402,13 @@ class _FillbarState extends State<Fillbar> with TickerProviderStateMixin{
           }
         }
         return Container(
-          width: width,
-          height: height,
+          width: isCircular ? radius * 2 : width,
+          height: isCircular ? radius * 2 : height,
           padding: widget.borderPadding,
           margin: widget.externalMargin,
           decoration: BoxDecoration(
             color: widget.paddingColor,
-            borderRadius: BorderRadius.all(Radius.circular(widget.radius)),
+            borderRadius: BorderRadius.all(Radius.circular(widget.borderRadius)),
             border: Border.all(
               color: widget.borderColor,
               width: widget.borderWidth
@@ -332,23 +417,23 @@ class _FillbarState extends State<Fillbar> with TickerProviderStateMixin{
           child: Container(
             decoration: BoxDecoration(
               color: widget.backgroundColor,
-              borderRadius: BorderRadius.all(Radius.circular(widget.radius))
+              borderRadius: BorderRadius.all(Radius.circular(widget.borderRadius))
             ),
             child:
-            widget.direction == Direction.toRight || widget.direction == Direction.toLeft ?
+            fillDirection == Direction.toRight || fillDirection == Direction.toLeft ?
             Row(
-              mainAxisAlignment: widget.direction == Direction.toRight ? MainAxisAlignment.start : MainAxisAlignment.end,
+              mainAxisAlignment: fillDirection == Direction.toRight ? MainAxisAlignment.start : MainAxisAlignment.end,
               children: [
                 Flexible(
                   child: SizeTransition(
                     sizeFactor: _fillAnimation,
                     axis: Axis.horizontal,
-                    axisAlignment: widget.direction == Direction.toRight ? -1 : 1,
+                    axisAlignment: fillDirection == Direction.toRight ? -1 : 1,
                     child: Container(
                       width: value,
                       decoration: BoxDecoration(
                         color: fillColor,
-                        borderRadius: BorderRadius.all(Radius.circular(widget.radius))
+                        borderRadius: BorderRadius.all(Radius.circular(widget.borderRadius))
                       ),
                       child: Center(
                         child: text
@@ -358,19 +443,20 @@ class _FillbarState extends State<Fillbar> with TickerProviderStateMixin{
                 )
               ],
             )
-            : Column(
-              mainAxisAlignment: widget.direction == Direction.toBottom ? MainAxisAlignment.start : MainAxisAlignment.end,
+            : (fillDirection == Direction.toBottom || fillDirection == Direction.toTop ?
+            Column(
+              mainAxisAlignment: fillDirection == Direction.toBottom ? MainAxisAlignment.start : MainAxisAlignment.end,
               children: [
                 Flexible(
                   child: SizeTransition(
                     sizeFactor: _fillAnimation,
                     axis: Axis.vertical,
-                    axisAlignment: widget.direction == Direction.toBottom ? -1 : 1,
+                    axisAlignment: fillDirection == Direction.toBottom ? -1 : 1,
                     child: Container(
                       height: value,
                       decoration: BoxDecoration(
                           color: fillColor,
-                          borderRadius: BorderRadius.all(Radius.circular(widget.radius))
+                          borderRadius: BorderRadius.all(Radius.circular(widget.borderRadius))
                       ),
                       child: Center(
                           child: text
@@ -379,10 +465,69 @@ class _FillbarState extends State<Fillbar> with TickerProviderStateMixin{
                   ),
                 )
               ],
-            ),
+            ) :
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Flexible(
+                  child: CustomPaint(
+                    painter: SectorsPainter(value, fillColor, fillDirection),
+                    size: Size.fromRadius(radius),
+                  ),
+                )
+              ],
+            )),
           ),
         );
       }
     );
+  }
+}
+
+class SectorsPainter extends CustomPainter {
+  SectorsPainter(
+    this.value,
+    this.fillColor,
+    this.direction
+  );
+  final double value;
+  final Color fillColor;
+  final Direction direction;
+
+  late double actualValue;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final Paint paint = Paint()
+      ..isAntiAlias = true
+      ..strokeWidth = 10.0
+      ..style = PaintingStyle.fill;
+
+    if(value > (2 * math.pi)) {
+      actualValue = 2 * math.pi;
+    } else {
+      if(value < 0) {
+        actualValue = 0;
+      } else {
+        actualValue = value;
+      }
+    }
+
+    final double mainCircleDiameter = size.width;
+    final arcsRect = Rect.fromLTWH(0, 0, mainCircleDiameter, mainCircleDiameter);
+
+    double startAngle = 0;
+    if(direction == Direction.clockWise) {
+      startAngle = math.pi * 3 / 2;
+    } else {
+      startAngle = -(math.pi / 2) + 2 * math.pi - actualValue;
+    }
+    canvas.drawArc(arcsRect, startAngle, actualValue, true,
+        paint..color = fillColor);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return false;
   }
 }
