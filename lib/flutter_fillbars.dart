@@ -407,8 +407,9 @@ class _FillbarState extends State<Fillbar> with TickerProviderStateMixin{
           padding: widget.borderPadding,
           margin: widget.externalMargin,
           decoration: BoxDecoration(
+            shape: isCircular ? BoxShape.circle : BoxShape.rectangle,
             color: widget.paddingColor,
-            borderRadius: BorderRadius.all(Radius.circular(widget.borderRadius)),
+            borderRadius: isCircular ? null : BorderRadius.all(Radius.circular(widget.borderRadius)),
             border: Border.all(
               color: widget.borderColor,
               width: widget.borderWidth
@@ -416,8 +417,9 @@ class _FillbarState extends State<Fillbar> with TickerProviderStateMixin{
           ),
           child: Container(
             decoration: BoxDecoration(
+              shape: isCircular ? BoxShape.circle : BoxShape.rectangle,
               color: widget.backgroundColor,
-              borderRadius: BorderRadius.all(Radius.circular(widget.borderRadius))
+              borderRadius: isCircular ? null : BorderRadius.all(Radius.circular(widget.borderRadius))
             ),
             child:
             fillDirection == Direction.toRight || fillDirection == Direction.toLeft ?
