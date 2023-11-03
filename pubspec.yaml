@@ -1,6 +1,6 @@
 name: flutter_fillbars
 description: flutter_fillbars is a simple flutter package that allows you to create a container which fills animatedly.
-version: 1.1.0
+version: 1.1.1
 homepage: https://github.com/SirioRigel/flutter_fillbars
 
 environment:

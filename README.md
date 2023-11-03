@@ -20,12 +20,12 @@ fills animatedly.
 
 Get this package by running this line in your local terminal:
 ```dart
-$ flutter pub add flutter_fillbars: ^1.1.0
+$ flutter pub add flutter_fillbars: ^1.1.1
 ```
 
 Or by adding this to pubspec.yaml:
 ```dart
-flutter_fillbars: ^1.1.0
+flutter_fillbars: ^1.1.1
 ```
 
 ## Usage

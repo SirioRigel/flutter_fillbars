@@ -1,3 +1,7 @@
+## 1.1.1
+
+Fixed an issue with the circular fillbar's border (it wasn't fully circular)
+
 ## 1.1.0
 
 - Added circular fillbar:
