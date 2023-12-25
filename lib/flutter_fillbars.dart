@@ -16,6 +16,7 @@ class Fillbar extends StatefulWidget {
     this.width = 100,
     this.text = const Text("0"),
     this.fillColor,
+    this.fillColorGradient,
     this.backgroundColor = const Color(0xFFCDCDCD),
     this.borderColor = const Color(0x00000000),
     this.paddingColor = const Color(0x00000000),
@@ -42,6 +43,7 @@ class Fillbar extends StatefulWidget {
     this.width = 100,
     this.text = const Text("0"),
     this.fillColor,
+    this.fillColorGradient,
     this.backgroundColor = const Color(0xFFCDCDCD),
     this.borderColor = const Color(0x00000000),
     this.paddingColor = const Color(0x00000000),
@@ -70,6 +72,7 @@ class Fillbar extends StatefulWidget {
     this.width = 100,
     this.text = const Text("0"),
     this.fillColor,
+    this.fillColorGradient,
     this.backgroundColor = const Color(0xFFCDCDCD),
     this.borderColor = const Color(0x00000000),
     this.paddingColor = const Color(0x00000000),
@@ -98,6 +101,7 @@ class Fillbar extends StatefulWidget {
     this.width = 0,
     this.text = const Text("0"),
     this.fillColor,
+    this.fillColorGradient,
     this.backgroundColor = const Color(0xFFCDCDCD),
     this.borderColor = const Color(0x00000000),
     this.paddingColor = const Color(0x00000000),
@@ -243,6 +247,17 @@ class Fillbar extends StatefulWidget {
   /// Fillbar and will write it as a percentage (int). If it's null, no value is displayed.
   final Text? text;
 
+  /// This property takes a list of colors and creates a linear gradient out of them.
+  /// If the Fillbar is circular it will be used a SweepGradient.
+  /// ```dart
+  /// // Creates a Fillbar where it's fillColor will be a linear gradient
+  /// Fillbar(value: 100, fillColorGradient: [Colors.red, Colors.yellow])
+  /// ```
+  /// If this property is specified, it will be applied to the Fillbar even if a
+  /// fillColor has been specified. If both are null, it will be used the primary color
+  /// of the current theme.
+  final List<Color>? fillColorGradient;
+
   @override
   State<Fillbar> createState() => _FillbarState();
 }
@@ -255,8 +270,10 @@ class _FillbarState extends State<Fillbar> with TickerProviderStateMixin{
   late double radius;
 
   late bool isCircular;
+  late bool useGradient;
 
   late Color fillColor;
+  late Gradient gradient;
 
   late Direction fillDirection;
 
@@ -267,6 +284,11 @@ class _FillbarState extends State<Fillbar> with TickerProviderStateMixin{
 
   @override
   void initState() {
+    if(widget.fillColorGradient != null) {
+      useGradient = true;
+    } else {
+      useGradient = false;
+    }
     if(widget.radius > 0) {
       isCircular = true;
       if(widget.direction != Direction.clockWise && widget.direction != Direction.antiClockWise) {
@@ -375,10 +397,32 @@ class _FillbarState extends State<Fillbar> with TickerProviderStateMixin{
         } else {
           height = widget.height;
         }
-        if(widget.fillColor == null) {
-          fillColor = Theme.of(context).colorScheme.primary;
+        if(useGradient) {
+          double startAngle = 0;
+          double endAngle = 0;
+          if(fillDirection == Direction.clockWise) {
+            startAngle = math.pi * 3 / 2;
+          } else {
+            startAngle = -(math.pi / 2) + 2 * math.pi - value;
+          }
+          endAngle = startAngle + 2 * math.pi;
+          switch(fillDirection) {
+            case Direction.toRight: gradient = LinearGradient(colors: widget.fillColorGradient!, end: Alignment(value / width, value / width));
+            break;
+            case Direction.toLeft: gradient = LinearGradient(colors: widget.fillColorGradient!, end: Alignment.centerLeft, begin: Alignment.centerRight);
+            break;
+            case Direction.toTop: gradient = LinearGradient(colors: widget.fillColorGradient!, end: Alignment.topCenter, begin: Alignment.bottomCenter);
+            break;
+            case Direction.toBottom: gradient = LinearGradient(colors: widget.fillColorGradient!, end: Alignment.bottomCenter, begin: Alignment.topCenter);
+            break;
+            default: gradient = SweepGradient(colors: widget.fillColorGradient!, startAngle: startAngle, endAngle: endAngle);
+          }
         } else {
-          fillColor = widget.fillColor!;
+          if(widget.fillColor == null) {
+            fillColor = Theme.of(context).colorScheme.primary;
+          } else {
+            fillColor = widget.fillColor!;
+          }
         }
         if(widget.text != null) {
           if(widget.text!.data == "0") {
@@ -434,7 +478,8 @@ class _FillbarState extends State<Fillbar> with TickerProviderStateMixin{
                     child: Container(
                       width: value,
                       decoration: BoxDecoration(
-                        color: fillColor,
+                        color: useGradient ? null : fillColor,
+                        gradient: useGradient ? gradient : null ,
                         borderRadius: BorderRadius.all(Radius.circular(widget.borderRadius))
                       ),
                       child: Center(
@@ -457,7 +502,8 @@ class _FillbarState extends State<Fillbar> with TickerProviderStateMixin{
                     child: Container(
                       height: value,
                       decoration: BoxDecoration(
-                          color: fillColor,
+                          color: useGradient ? null : fillColor,
+                          gradient: useGradient ? gradient : null,
                           borderRadius: BorderRadius.all(Radius.circular(widget.borderRadius))
                       ),
                       child: Center(
@@ -473,7 +519,7 @@ class _FillbarState extends State<Fillbar> with TickerProviderStateMixin{
               children: [
                 Flexible(
                   child: CustomPaint(
-                    painter: SectorsPainter(value, fillColor, fillDirection),
+                    painter: SectorsPainter(value, useGradient ? gradient.colors : [fillColor], fillDirection),
                     size: Size.fromRadius(radius),
                   ),
                 )
@@ -493,7 +539,7 @@ class SectorsPainter extends CustomPainter {
     this.direction
   );
   final double value;
-  final Color fillColor;
+  final List<Color> fillColor;
   final Direction direction;
 
   late double actualValue;
@@ -524,8 +570,20 @@ class SectorsPainter extends CustomPainter {
     } else {
       startAngle = -(math.pi / 2) + 2 * math.pi - actualValue;
     }
-    canvas.drawArc(arcsRect, startAngle, actualValue, true,
-        paint..color = fillColor);
+
+    if(fillColor.length > 1) {
+      SweepGradient gradient;
+      if(direction == Direction.clockWise) {
+        gradient = SweepGradient(colors: fillColor, endAngle: actualValue, transform: const GradientRotation( - math.pi/2),);
+      } else {
+        gradient = SweepGradient(colors: fillColor.reversed.toList(), endAngle: actualValue, transform: const GradientRotation(math.pi * 3 / 2));
+      }
+      paint.shader = gradient.createShader(arcsRect);
+      canvas.drawArc(arcsRect, startAngle, actualValue, true, paint);
+    } else {
+      canvas.drawArc(arcsRect, startAngle, actualValue, true,
+          paint..color = fillColor[0]);
+    }
   }
 
   @override

@@ -1,6 +1,13 @@
+## 1.2.0
+
+- Added the property fillColorGradient: it takes a list of colors and creates a gradient out of them.
+  If fillColorGradient is specified, it will have the priority over the fillColor property.
+  Use it wisely and create beautifull Fillbars!
+
+
 ## 1.1.1
 
-Fixed an issue with the circular fillbar's border (it wasn't fully circular)
+- Fixed an issue with the circular fillbar's border (it wasn't fully circular)
 
 ## 1.1.0
 
@@ -11,11 +18,11 @@ Fixed an issue with the circular fillbar's border (it wasn't fully circular)
 
 ## 1.0.1
 
-Fixed a minor issue
+- Fixed a minor issue
 
 ## 1.0.0
 
-Released the package on pub.dev!
+- Released the package on pub.dev!
 
 ## 0.4.2
 
@@ -35,7 +42,7 @@ Released the package on pub.dev!
 - Added a periodic fillbar with a new property:
   - periodic:either true or false, it creates a fillbar with a periodic animation if true
 - Fixed a bug with the filling animation: at the beginning of the animation the "fill area" would just go 
-out of the left bounds.
+  out of the left bounds.
 
 ## 0.3.0 
 

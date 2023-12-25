@@ -60,17 +60,17 @@ class _MyHomePageState extends State<MyHomePage> {
               width: 180,
               fillColor: Colors.green,
             ),
-            const Row(
+            Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Fillbar(
+                const Fillbar(
                   value: 85,
                   width: 30,
                   height: 180,
                   fillColor: Colors.deepPurple,
                   direction: Direction.toBottom,
                 ),
-                Fillbar(
+                const Fillbar(
                   value: 140,
                   height: 180,
                   width: 30,
@@ -78,13 +78,18 @@ class _MyHomePageState extends State<MyHomePage> {
                   direction: Direction.toTop,
                 ),
                 Fillbar(
-                  value: 85,
+                  value: 100,
                   width: 30,
                   height: 180,
-                  fillColor: Colors.cyan,
+                  fillColorGradient: [
+                    Colors.purple,
+                    Colors.blue.shade900,
+                    Colors.cyan
+                  ],
                   direction: Direction.toBottom,
+                  text: null,
                 ),
-                Fillbar.circular(value: math.pi *  13 / 8, radius: 50)
+                const Fillbar.circular(value: math.pi *  15 / 8, radius: 150, fillColorGradient: [Colors.red, Colors.orange, Colors.yellow],)
               ],
             )
           ],

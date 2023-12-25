@@ -1,7 +1,11 @@
 # Fillbars
 
-`flutter_fillbars` is a simple flutter package that allows you to create a container which
-fills animatedly.
+`flutter_fillbars` is a simple flutter package that allows you to create a container which can
+fill with or without an animation. Play with the shape of the container to make it more elliptical, or
+use the preset to make it fully circular. You can apply a static color to it or use a list of color and
+a Gradient will be created and applied to your Fillbar. 
+
+![Package preview](assets/prospect.png)
 
 ## Contents
 
@@ -20,12 +24,12 @@ fills animatedly.
 
 Get this package by running this line in your local terminal:
 ```dart
-$ flutter pub add flutter_fillbars: ^1.1.1
+$ flutter pub add flutter_fillbars: ^1.2.0
 ```
 
 Or by adding this to pubspec.yaml:
 ```dart
-flutter_fillbars: ^1.1.1
+flutter_fillbars: ^1.2.0
 ```
 
 ## Usage
@@ -142,11 +146,12 @@ If you want, you can even contribute, just open a pull-request and I'll be more 
 
 ## RoadMad
 
-- :heavy_check_mark: Static fillbar
-- :heavy_check_mark: Animated fillbar
-- :heavy_check_mark: Periodic fillbar
+- :heavy_check_mark: Static Fillbar
+- :heavy_check_mark: Animated Fillbar
+- :heavy_check_mark: Periodic Fillbar
 - :heavy_check_mark: Simple Example
-- :heavy_check_mark: Text over fillbar
+- :heavy_check_mark: Text over Fillbar
 - :heavy_check_mark: Package up on Pub.dev
-- :heavy_check_mark: Added a circular fillbar
-- [] Add a color gradient in fill area
+- :heavy_check_mark: Added a circular Fillbar
+- :heavy_check_mark: Add a color gradient in fill area
+- [ ] Rotate the Fillbar
