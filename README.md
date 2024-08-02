@@ -11,11 +11,12 @@ a Gradient will be created and applied to your Fillbar.
 
 - [Installation](#installation)
 - [Usage](#usage)
-  - [Custom fillbar](#custom-fillbars)
+- [Custom fillbars](#custom-fillbars)
   - [Static fillbar](#static-fillbars)
   - [Animated fillbar](#animated-fillbar)
   - [Periodic fillbar](#periodic-fillbar)
   - [Circular fillbar](#circular-fillbar)
+- [Rotating a fillbar](#rotating-a-fillbar)
 - [Examples](#examples)
 - [Additional information](#additional-information)
 
@@ -24,12 +25,12 @@ a Gradient will be created and applied to your Fillbar.
 
 Get this package by running this line in your local terminal:
 ```dart
-$ flutter pub add flutter_fillbars: ^1.2.0
+$ flutter pub add flutter_fillbars: ^1.3.0
 ```
 
 Or by adding this to pubspec.yaml:
 ```dart
-flutter_fillbars: ^1.2.0
+flutter_fillbars: ^1.3.0
 ```
 
 ## Usage
@@ -44,7 +45,7 @@ const Fillbar(value: 50, width: 100, height: 20, fillColor: Colors.blue,)
 const Fillbar.static(value: 100, width: 100, height: 20)
 ```
 
-### Custom fillbars
+## Custom fillbars
 
 The following code shows a custom fillbar. 
 
@@ -132,6 +133,16 @@ Fillbar.circular(
 
 ![A circular fillbar](assets/circular_fillbar.png)
 
+## Rotating a fillbar
+Since version 1.3.0 it's possible to rotate fillbars. Let's go over some of the properties
+
+`rotationAngle`: Specifies an angle at which the fillbar should be rotated
+`rotationPivot`: Specifies the pivot of the rotation
+`rotationDuration`: Specifies the duration of the rotation's animation.
+`rotationCurve`: If specified animates the fillbar's rotation.
+`isRotationPeriodic`: Specifies weather the animation should keep playing or just play once.
+
+
 ## Examples
 
 See [examples](example) for some basic examples.
@@ -154,4 +165,4 @@ If you want, you can even contribute, just open a pull-request and I'll be more 
 - :heavy_check_mark: Package up on Pub.dev
 - :heavy_check_mark: Added a circular Fillbar
 - :heavy_check_mark: Add a color gradient in fill area
-- [ ] Rotate the Fillbar
+- :heavy_check_mark: Rotate the Fillbar

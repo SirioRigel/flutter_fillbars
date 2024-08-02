@@ -17,6 +17,11 @@ class Fillbar extends StatefulWidget {
     this.text = const Text("0"),
     this.fillColor,
     this.fillColorGradient,
+    this.rotationAngle = 0,
+    this.rotationPivot = Alignment.center,
+    this.rotationDuration = const Duration(seconds: 2),
+    this.rotationCurve = Curves.easeOutCubic,
+    this.isRotationPeriodic = false,
     this.backgroundColor = const Color(0xFFCDCDCD),
     this.borderColor = const Color(0x00000000),
     this.paddingColor = const Color(0x00000000),
@@ -44,6 +49,8 @@ class Fillbar extends StatefulWidget {
     this.text = const Text("0"),
     this.fillColor,
     this.fillColorGradient,
+    this.rotationAngle = 0,
+    this.rotationPivot = Alignment.center,
     this.backgroundColor = const Color(0xFFCDCDCD),
     this.borderColor = const Color(0x00000000),
     this.paddingColor = const Color(0x00000000),
@@ -56,6 +63,9 @@ class Fillbar extends StatefulWidget {
   }) : duration = null,
        curve = null,
        periodic = false,
+       rotationDuration = null,
+       rotationCurve = null,
+       isRotationPeriodic = false,
        super(key: key);
 
   /// Creates a periodic Fillbar which will be animated forever with a periodicity of
@@ -73,6 +83,11 @@ class Fillbar extends StatefulWidget {
     this.text = const Text("0"),
     this.fillColor,
     this.fillColorGradient,
+    this.rotationAngle = 0,
+    this.rotationPivot = Alignment.center,
+    this.rotationDuration = const Duration(seconds: 2),
+    this.rotationCurve = Curves.easeOutCubic,
+    this.isRotationPeriodic = false,
     this.backgroundColor = const Color(0xFFCDCDCD),
     this.borderColor = const Color(0x00000000),
     this.paddingColor = const Color(0x00000000),
@@ -102,6 +117,11 @@ class Fillbar extends StatefulWidget {
     this.text = const Text("0"),
     this.fillColor,
     this.fillColorGradient,
+    this.rotationAngle = 0,
+    this.rotationPivot = Alignment.center,
+    this.rotationDuration = const Duration(seconds: 2),
+    this.rotationCurve = Curves.easeOutCubic,
+    this.isRotationPeriodic = false,
     this.backgroundColor = const Color(0xFFCDCDCD),
     this.borderColor = const Color(0x00000000),
     this.paddingColor = const Color(0x00000000),
@@ -126,6 +146,12 @@ class Fillbar extends StatefulWidget {
   /// application lifecycle. The Fillbar will be automatically updated.
   /// If the value is greater than the constraints given by the flutter framework,
   /// the widget will adjust itself to the maxWidth allowed.
+  /// The following example will create a full Fillbar of width 100. The width here
+  /// is the property that gets adjusted rather than the value itself because it's
+  /// not specified.
+  /// ```dart
+  /// Fillbar(value: 100) // Full Fillbar of width and value 100.
+  /// ```
   final double value;
 
   /// This property specifies the radius of the circular fillbar. The default value is 25
@@ -258,6 +284,32 @@ class Fillbar extends StatefulWidget {
   /// of the current theme.
   final List<Color>? fillColorGradient;
 
+  /// Specifies the angle of rotation of the Fillbar. Note that the angle will be
+  /// normalized to a value between 0 and 2 * PI. A negative rotation will make the
+  /// Fillbar rotate counterClockwise.
+  /// ```dart
+  /// // Creates a Fillbar rotated by 30°
+  /// Fillbar(value: 100, rotationAngle: math.pi / 6)
+  /// ```
+  /// Note that the rotation uses the standard rotation for a RotationTransition.
+  /// This means that the rotation in the above example will occur pointed towards
+  /// the bottom and not the top.
+  final double? rotationAngle;
+
+  /// Describes the rotation pivot relative to the box where the Fillbar is inscribed.
+  /// An Alignment of (0,0) sets a rotation around the center of the widget.
+  /// Using an alignment of (1,-1) sets the rotation around the topRight corner.
+  final Alignment? rotationPivot;
+
+  /// Sets the duration of the rotation.
+  final Duration? rotationDuration;
+
+  /// Describes the animation curve for the rotation.
+  final Curve? rotationCurve;
+
+  /// Specifies weather the rotation should be periodic or be executed just once.
+  final bool isRotationPeriodic;
+
   @override
   State<Fillbar> createState() => _FillbarState();
 }
@@ -279,6 +331,9 @@ class _FillbarState extends State<Fillbar> with TickerProviderStateMixin{
 
   late final AnimationController _fillController;
   late final Animation<double> _fillAnimation;
+
+  late final AnimationController _rotationController;
+  // late final Animation<double> _rotationAnimation;
 
   late Text text;
 
@@ -324,7 +379,7 @@ class _FillbarState extends State<Fillbar> with TickerProviderStateMixin{
     } else {
       _fillController = AnimationController(
         vsync: this,
-        duration: Duration.zero
+        duration: widget.duration ?? Duration.zero
       );
       _fillAnimation = CurvedAnimation(
         curve: Curves.linear,
@@ -333,6 +388,31 @@ class _FillbarState extends State<Fillbar> with TickerProviderStateMixin{
     }
     if(!widget.periodic) {
       _fillController.forward();
+    }
+    if(widget.rotationDuration != null && widget.rotationCurve != null) {
+      if(widget.isRotationPeriodic) {
+        _rotationController = AnimationController(
+          vsync: this,
+          duration: widget.rotationDuration
+        )..repeat(reverse: true);
+      } else {
+        _rotationController = AnimationController(
+            vsync: this,
+            duration: widget.rotationDuration
+        );
+      }
+      //_rotationAnimation = Tween(begin: 0.0, end: (widget.rotationAngle ?? 0) / (2 * math.pi)).animate(_rotationController);
+    } else {
+      _rotationController = AnimationController(
+          vsync: this,
+          duration: widget.rotationDuration ?? Duration.zero
+      );
+      //_rotationAnimation = Tween(begin: 0.0, end: (widget.rotationAngle ?? 0) / (2 * math.pi)).animate(_rotationController);
+    }
+    if(!widget.isRotationPeriodic) {
+      if(widget.rotationAngle != 0) {
+        _rotationController.forward();
+      }
     }
     text = const Text("");
     super.initState();
@@ -346,9 +426,16 @@ class _FillbarState extends State<Fillbar> with TickerProviderStateMixin{
 
   @override
   Widget build(BuildContext context) {
+
     if(_fillController.isCompleted && !widget.periodic) {
       _fillController.reset();
       _fillController.forward();
+    }
+    if(_rotationController.isCompleted && !widget.isRotationPeriodic) {
+      if(widget.rotationAngle != 0) {
+        _rotationController.reset();
+        _rotationController.forward();
+      }
     }
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -445,86 +532,92 @@ class _FillbarState extends State<Fillbar> with TickerProviderStateMixin{
             text = widget.text!;
           }
         }
-        return Container(
-          width: isCircular ? radius * 2 : width,
-          height: isCircular ? radius * 2 : height,
-          padding: widget.borderPadding,
-          margin: widget.externalMargin,
-          decoration: BoxDecoration(
-            shape: isCircular ? BoxShape.circle : BoxShape.rectangle,
-            color: widget.paddingColor,
-            borderRadius: isCircular ? null : BorderRadius.all(Radius.circular(widget.borderRadius)),
-            border: Border.all(
-              color: widget.borderColor,
-              width: widget.borderWidth
-            )
-          ),
+        return AnimatedRotation(
+          turns: (widget.rotationAngle ?? 0) / (2 * math.pi),
+          alignment: widget.rotationPivot ?? Alignment.center,
+          duration: widget.rotationDuration ?? Duration.zero,
+          curve: widget.rotationCurve == null ? Curves.linear : widget.rotationCurve!,
           child: Container(
+            width: isCircular ? radius * 2 : width,
+            height: isCircular ? radius * 2 : height,
+            padding: widget.borderPadding,
+            margin: widget.externalMargin,
             decoration: BoxDecoration(
               shape: isCircular ? BoxShape.circle : BoxShape.rectangle,
-              color: widget.backgroundColor,
-              borderRadius: isCircular ? null : BorderRadius.all(Radius.circular(widget.borderRadius))
+              color: widget.paddingColor,
+              borderRadius: isCircular ? null : BorderRadius.all(Radius.circular(widget.borderRadius)),
+              border: Border.all(
+                color: widget.borderColor,
+                width: widget.borderWidth
+              )
             ),
-            child:
-            fillDirection == Direction.toRight || fillDirection == Direction.toLeft ?
-            Row(
-              mainAxisAlignment: fillDirection == Direction.toRight ? MainAxisAlignment.start : MainAxisAlignment.end,
-              children: [
-                Flexible(
-                  child: SizeTransition(
-                    sizeFactor: _fillAnimation,
-                    axis: Axis.horizontal,
-                    axisAlignment: fillDirection == Direction.toRight ? -1 : 1,
-                    child: Container(
-                      width: value,
-                      decoration: BoxDecoration(
-                        color: useGradient ? null : fillColor,
-                        gradient: useGradient ? gradient : null ,
-                        borderRadius: BorderRadius.all(Radius.circular(widget.borderRadius))
-                      ),
-                      child: Center(
-                        child: text
-                      ),
-                    ),
-                  ),
-                )
-              ],
-            )
-            : (fillDirection == Direction.toBottom || fillDirection == Direction.toTop ?
-            Column(
-              mainAxisAlignment: fillDirection == Direction.toBottom ? MainAxisAlignment.start : MainAxisAlignment.end,
-              children: [
-                Flexible(
-                  child: SizeTransition(
-                    sizeFactor: _fillAnimation,
-                    axis: Axis.vertical,
-                    axisAlignment: fillDirection == Direction.toBottom ? -1 : 1,
-                    child: Container(
-                      height: value,
-                      decoration: BoxDecoration(
+            child: Container(
+              decoration: BoxDecoration(
+                shape: isCircular ? BoxShape.circle : BoxShape.rectangle,
+                color: widget.backgroundColor,
+                borderRadius: isCircular ? null : BorderRadius.all(Radius.circular(widget.borderRadius))
+              ),
+              child:
+              fillDirection == Direction.toRight || fillDirection == Direction.toLeft ?
+              Row(
+                mainAxisAlignment: fillDirection == Direction.toRight ? MainAxisAlignment.start : MainAxisAlignment.end,
+                children: [
+                  Flexible(
+                    child: SizeTransition(
+                      sizeFactor: _fillAnimation,
+                      axis: Axis.horizontal,
+                      axisAlignment: fillDirection == Direction.toRight ? -1 : 1,
+                      child: Container(
+                        width: value,
+                        decoration: BoxDecoration(
                           color: useGradient ? null : fillColor,
-                          gradient: useGradient ? gradient : null,
+                          gradient: useGradient ? gradient : null ,
                           borderRadius: BorderRadius.all(Radius.circular(widget.borderRadius))
-                      ),
-                      child: Center(
+                        ),
+                        child: Center(
                           child: text
+                        ),
                       ),
                     ),
-                  ),
-                )
-              ],
-            ) :
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Flexible(
-                  child: CustomPaint(
-                    painter: SectorsPainter(value, useGradient ? gradient.colors : [fillColor], fillDirection),
-                    size: Size.fromRadius(radius),
-                  ),
-                )
-              ],
-            )),
+                  )
+                ],
+              )
+              : (fillDirection == Direction.toBottom || fillDirection == Direction.toTop ?
+              Column(
+                mainAxisAlignment: fillDirection == Direction.toBottom ? MainAxisAlignment.start : MainAxisAlignment.end,
+                children: [
+                  Flexible(
+                    child: SizeTransition(
+                      sizeFactor: _fillAnimation,
+                      axis: Axis.vertical,
+                      axisAlignment: fillDirection == Direction.toBottom ? -1 : 1,
+                      child: Container(
+                        height: value,
+                        decoration: BoxDecoration(
+                            color: useGradient ? null : fillColor,
+                            gradient: useGradient ? gradient : null,
+                            borderRadius: BorderRadius.all(Radius.circular(widget.borderRadius))
+                        ),
+                        child: Center(
+                            child: text
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ) :
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Flexible(
+                    child: CustomPaint(
+                      painter: SectorsPainter(value, useGradient ? gradient.colors : [fillColor], fillDirection),
+                      size: Size.fromRadius(radius),
+                    ),
+                  )
+                ],
+              )),
+            ),
           ),
         );
       }

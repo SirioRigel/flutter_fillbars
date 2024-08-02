@@ -1,9 +1,17 @@
+## 1.3.0
+
+- Added a rotation to the Fillbar:
+  - rotationAngle: specifies the angle of rotation for the Fillbar
+  - rotationPivot: specifies the alignemnt of rotation.
+  - rotationDuration: determines the duration for the Fillbar's rotation
+  - rotationCurve: sets the animation curve for the rotation
+  - isRotationPeriodic: specifies whether it should be only executed once (false) or indefenetly (true)
+
 ## 1.2.0
 
 - Added the property fillColorGradient: it takes a list of colors and creates a gradient out of them.
   If fillColorGradient is specified, it will have the priority over the fillColor property.
   Use it wisely and create beautifull Fillbars!
-
 
 ## 1.1.1
 
