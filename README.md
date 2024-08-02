@@ -136,11 +136,11 @@ Fillbar.circular(
 ## Rotating a fillbar
 Since version 1.3.0 it's possible to rotate fillbars. Let's go over some of the properties
 
-`rotationAngle`: Specifies an angle at which the fillbar should be rotated
-`rotationPivot`: Specifies the pivot of the rotation
-`rotationDuration`: Specifies the duration of the rotation's animation.
-`rotationCurve`: If specified animates the fillbar's rotation.
-`isRotationPeriodic`: Specifies weather the animation should keep playing or just play once.
+- `rotationAngle`: Specifies an angle at which the fillbar should be rotated
+- `rotationPivot`: Specifies the pivot of the rotation
+- `rotationDuration`: Specifies the duration of the rotation's animation.
+- `rotationCurve`: If specified animates the fillbar's rotation.
+- `isRotationPeriodic`: Specifies weather the animation should keep playing or just play once.
 
 
 ## Examples
@@ -155,7 +155,7 @@ If you want, you can even contribute, just open a pull-request and I'll be more 
 [Follow me on twitter](https://twitter.com/sirio_rigel)
 <a href="https://www.buymeacoffee.com/tommasomiliani" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
 
-## RoadMad
+## Roadmap
 
 - :heavy_check_mark: Static Fillbar
 - :heavy_check_mark: Animated Fillbar
