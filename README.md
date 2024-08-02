@@ -20,7 +20,6 @@ a Gradient will be created and applied to your Fillbar.
 - [Examples](#examples)
 - [Additional information](#additional-information)
 
-
 ## Installation
 
 Get this package by running this line in your local terminal:
